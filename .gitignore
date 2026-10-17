@@ -1,0 +1,6 @@
+.DS_Store
+# 构建产物：用 ./source/build.sh 重新生成
+QRMaker.app/
+test/build/
+# 源码压缩包（与仓库内容重复）
+*.zip
