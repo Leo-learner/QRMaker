@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>二维码生成器</title>
+  <meta name="description" content="在浏览器里实时生成二维码。支持中文、emoji，自定义颜色，导出 PNG / SVG。内容不会离开你的设备。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 1h5v5H1zM10 1h5v5h-5zM1 10h5v5H1zM10 10h2v2h-2zM13 13h2v2h-2z' fill='%23222'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>二维码生成器</h1>
+      <p class="sub">输入即生成，全程在本机浏览器里完成，内容不会上传。</p>
+    </header>
+
+    <section class="card">
+      <label class="field-label" for="text">内容</label>
+      <textarea id="text" rows="4" spellcheck="false" autofocus
+        placeholder="在此输入或粘贴文本、网址、WiFi 配置…"></textarea>
+      <div class="row meta">
+        <span id="count" class="muted">字节数：0 / 上限约 2331</span>
+        <button id="clear" type="button" class="link" hidden>清空</button>
+      </div>
+    </section>
+
+    <section class="preview-wrap" aria-live="polite">
+      <div class="preview">
+        <img id="qr" alt="生成的二维码" width="240" height="240" hidden>
+        <div id="placeholder" class="placeholder">
+          <svg viewBox="0 0 16 16" width="52" height="52" aria-hidden="true"><path d="M1 1h5v5H1zM10 1h5v5h-5zM1 10h5v5H1zM10 10h2v2h-2zM13 13h2v2h-2zM8 1h1v1H8zM8 4h1v2H8zM1 8h2v1H1zM4 8h3v1H4zM9 8h2v1H9zM13 8h2v1h-2zM8 10h1v3H8z" fill="currentColor"/></svg>
+          <p id="placeholder-text">输入内容后在此预览</p>
+        </div>
+      </div>
+      <p id="warn" class="warn" hidden>前景色应明显深于背景色，否则可能无法扫描</p>
+    </section>
+
+    <section class="card controls">
+      <div class="field">
+        <span class="field-label" id="level-label">纠错等级</span>
+        <div class="segmented" role="radiogroup" aria-labelledby="level-label">
+          <label><input type="radio" name="level" value="L"><span>L（低）</span></label>
+          <label><input type="radio" name="level" value="M" checked><span>M（中）</span></label>
+          <label><input type="radio" name="level" value="Q"><span>Q（较高）</span></label>
+          <label><input type="radio" name="level" value="H"><span>H（高）</span></label>
+        </div>
+      </div>
+
+      <div class="field row">
+        <label class="field-label" for="size">导出尺寸</label>
+        <input id="size" type="range" min="256" max="1024" step="32" value="512">
+        <output id="size-out" for="size">512 px</output>
+      </div>
+
+      <div class="field row colors">
+        <label class="color"><span>前景色</span><input id="fg" type="color" value="#000000"></label>
+        <label class="color"><span>背景色</span><input id="bg" type="color" value="#ffffff"></label>
+        <button id="reset" type="button" class="link">恢复默认</button>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="copy" type="button" class="btn" disabled>复制二维码</button>
+      <span class="spacer"></span>
+      <button id="svg" type="button" class="btn" disabled>导出 SVG</button>
+      <button id="png" type="button" class="btn primary" disabled>导出 PNG</button>
+    </section>
+    <p id="toast" class="toast" role="status"></p>
+
+    <footer>
+      <a href="https://github.com/Leo-learner/QRMaker">GitHub</a> · MIT ·
+      <span class="muted">macOS 原生版见 main 分支</span>
+    </footer>
+  </main>
+
+  <script src="qr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

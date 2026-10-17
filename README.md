@@ -2,7 +2,17 @@
 
 一个原生 macOS 应用：输入任意文本，实时生成二维码。SwiftUI + CoreImage，零第三方依赖。
 
-## 使用
+## 网页版（本分支）
+
+`web` 分支是纯静态网页版，零依赖、无需构建，内容全程在浏览器本地处理，不会上传。
+
+- 直接用浏览器打开 `index.html`，或在目录下起任意静态服务器（如 `python3 -m http.server`）
+- 功能与 macOS 版一致：实时生成、L/M/Q/H 纠错、256–1024 px、自定义前景/背景色、对比度提示、复制到剪贴板、⌘/Ctrl+S 导出 PNG，另外多了 SVG 导出
+- 编码器是自己实现的（`qr.js`，ISO/IEC 18004 byte 模式，Version 1–40），不依赖 CoreImage 或第三方库
+
+验证：`node test/web/verify.mjs` 把 40 个版本 × 4 个纠错等级（含容量上限、中文、emoji）共 360 个二维码渲染成 PNG，交给 macOS Vision 解码，要求与原文逐字一致（需要 macOS 与 Xcode 命令行工具）。
+
+## macOS 版使用
 
 先按下文「从源码重新构建」生成 `QRMaker.app`，双击打开（构建时自动 ad-hoc 签名，本机可直接运行）。
 
@@ -39,7 +49,9 @@ source/
   QRCodeEngine.swift    # 二维码生成（CoreImage）
   Info.plist            # 应用元信息
   build.sh              # 一键构建脚本
+qr.js / app.js / index.html / style.css   # 网页版
 test/
+  web/verify.mjs        # 网页版编码器自检
   gen/main.swift        # 生成测试图片与边界自检
   decode/main.swift     # 用 Vision 框架解码二维码
   clip/main.swift       # 读取剪贴板 PNG
